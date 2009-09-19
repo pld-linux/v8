@@ -1,9 +1,9 @@
-%define snap	20090918
-
+%define		snap	20090918
+%define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
 Version:	1.2.13
-Release:	0.%{snap}.1
+Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
 URL:		http://code.google.com/p/v8
@@ -11,10 +11,10 @@ URL:		http://code.google.com/p/v8
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	%{name}-%{snap}.tar.bz2
 # Source0-md5:	736a6a7a21aa8a2834a583763d37a7af
-#Patch0: %{name}-svn2430-unused-parameter.patch
-#Patch1: http://codereview.chromium.org/download/issue115176_4_1002.diff
+#Patch0:	%{name}-svn2430-unused-parameter.patch
+#Patch1:	http://codereview.chromium.org/download/issue115176_4_1002.diff
 BuildRequires:	scons
-ExclusiveArch:	%{ix86} x86_64 arm
+ExclusiveArch:	%{ix86} %{x8664} arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -32,16 +32,18 @@ Development headers and libraries for v8.
 
 %prep
 %setup -q -n %{name}
-#%patch0 -p1 -b .unused-parameter
-#%patch1 -p0 -b .issue115176
+#%patch0 -p1
+#%patch1 -p0
 
 %build
 %scons \
-	library=shared snapshots=on \
+	library=shared \
+	snapshots=on \
 %ifarch x86_64
-arch=x64 \
+	arch=x64 \
 %endif
-env=CCFLAGS:"-fPIC"
+	env=CCFLAGS:"-fPIC"
+
 # When will people learn to create versioned shared libraries by default?
 # first, lets get rid of the old .so
 rm -rf libv8.so
@@ -59,30 +61,27 @@ rm -rf libv8.so
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_includedir},%{_libdir}}
+cp -a include/*.h $RPM_BUILD_ROOT%{_includedir}
+install -p libv8.so.*.*.* $RPM_BUILD_ROOT%{_libdir}
 
-
-install -p include/*.h $RPM_BUILD_ROOT%{_includedir}
-install -p libv8.so.0.0.0 $RPM_BUILD_ROOT%{_libdir}
-
-cd $RPM_BUILD_ROOT%{_libdir}
-ln -sf libv8.so.0.0.0 libv8.so
-ln -sf libv8.so.0.0.0 libv8.so.0
-ln -sf libv8.so.0.0.0 libv8.so.0.0
-
-chmod -x $RPM_BUILD_ROOT%{_includedir}/v8*.h
+lib=$(basename $RPM_BUILD_ROOT%{_libdir}/libv8.so.*.*.*)
+ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so
+ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0
+ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0.0
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post	-p /sbin/ldconfig
+%postun	-p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog LICENSE
-%attr(755,root,root) %{_libdir}/*.so.*
+%attr(755,root,root) %{_libdir}/libv8.so.*.*.*
+%attr(755,root,root) %ghost %{_libdir}/libv8.so.0
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_libdir}/libv8.so
 %{_includedir}/*.h
-%attr(755,root,root) %{_libdir}/*.so
