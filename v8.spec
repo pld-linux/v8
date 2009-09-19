@@ -1,3 +1,5 @@
+# TODO
+# - cc,cxx,rpmcflags,rpmcppflags are not passed to build
 %define		snap	20090918
 %define		rel		1
 Summary:	JavaScript Engine
