@@ -1,5 +1,6 @@
 # TODO
-# - cc,cxx,rpmcflags,rpmcppflags are not passed to build
+# - cxx is not passed to build
+# - cleaner way for cxxflags
 %define		snap	20090918
 %define		rel		1
 Summary:	JavaScript Engine
@@ -15,6 +16,7 @@ Source0:	%{name}-%{snap}.tar.bz2
 # Source0-md5:	736a6a7a21aa8a2834a583763d37a7af
 #Patch0:	%{name}-svn2430-unused-parameter.patch
 #Patch1:	http://codereview.chromium.org/download/issue115176_4_1002.diff
+BuildRequires:	readline-devel
 BuildRequires:	scons
 ExclusiveArch:	%{ix86} %{x8664} arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -36,19 +38,21 @@ Development headers and libraries for v8.
 %setup -q -n %{name}
 #%patch0 -p1
 #%patch1 -p0
+%{__sed} -i -e "s,'-O3','%{rpmcxxflags}'.split(' ')," SConstruct
 
 %build
 %scons \
 	library=shared \
 	snapshots=on \
+	soname=off \
+	console=readline \
 %ifarch x86_64
 	arch=x64 \
 %endif
 	env=CCFLAGS:"-fPIC"
 
-# When will people learn to create versioned shared libraries by default?
-# first, lets get rid of the old .so
-rm -rf libv8.so
+# the soname=on creates soname as libv8-1.3.11.1.so, that's wrong
+rm libv8.so
 # Now, lets make it right.
 %ifarch arm
 %{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.0.0.0 -shared -Wl,-soname,libv8.so.0 obj/release/*.os obj/release/arm/*.os
@@ -56,7 +60,7 @@ rm -rf libv8.so
 %ifarch %{ix86}
 %{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.0.0.0 -shared -Wl,-soname,libv8.so.0 obj/release/*.os obj/release/ia32/*.os
 %endif
-%ifarch x86_64
+%ifarch %{x8664}
 %{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.0.0.0 -shared -Wl,-soname,libv8.so.0 obj/release/*.os obj/release/x64/*.os
 %endif
 
@@ -69,7 +73,6 @@ install -p libv8.so.*.*.* $RPM_BUILD_ROOT%{_libdir}
 lib=$(basename $RPM_BUILD_ROOT%{_libdir}/libv8.so.*.*.*)
 ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so
 ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0
-ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0.0
 
 %clean
 rm -rf $RPM_BUILD_ROOT
