@@ -16,6 +16,7 @@ Source0:	%{name}-%{snap}.tar.bz2
 # Source0-md5:	736a6a7a21aa8a2834a583763d37a7af
 #Patch0:	%{name}-svn2430-unused-parameter.patch
 #Patch1:	http://codereview.chromium.org/download/issue115176_4_1002.diff
+BuildRequires:	libstdc++-devel
 BuildRequires:	readline-devel
 BuildRequires:	scons
 ExclusiveArch:	%{ix86} %{x8664} arm
