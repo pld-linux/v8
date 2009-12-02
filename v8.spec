@@ -10,7 +10,7 @@
 %define		sover %{somajor}.%{sominor}.%{sobuild}
 
 %define		snap	20091118svn3334
-%define		rel		0.1
+%define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
 Version:	2.0.0
@@ -35,10 +35,24 @@ V8 is Google's open source JavaScript engine. V8 is written in C++ and
 is used in Google Chrome, the open source browser from Google. V8
 implements ECMAScript as specified in ECMA-262, 3rd edition.
 
+This package contains the command line program.
+
+%package libs
+Summary:	V8 JavaScript Engine shared library
+Group:		Libraries
+Conflicts:	v8 < 2.0.0
+
+%description libs
+V8 is Google's open source JavaScript engine. V8 is written in C++ and
+is used in Google Chrome, the open source browser from Google. V8
+implements ECMAScript as specified in ECMA-262, 3rd edition.
+
+This package contains the shared library.
+
 %package devel
 Summary:	Development headers and libraries for v8
 Group:		Development/Libraries
-Requires:	%{name} = %{version}-%{release}
+Requires:	%{name}-libs = %{version}-%{release}
 
 %description devel
 Development headers and libraries for v8.
@@ -120,13 +134,15 @@ ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%post	-p /sbin/ldconfig
-%postun	-p /sbin/ldconfig
+%post	libs -p /sbin/ldconfig
+%postun	libs -p /sbin/ldconfig
 
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog LICENSE
 %attr(755,root,root) %{_bindir}/v8
+
+%files libs
 %attr(755,root,root) %{_libdir}/libv8.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libv8.so.0
 
