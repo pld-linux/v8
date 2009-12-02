@@ -1,0 +1,13 @@
+diff -up v8/src/d8.cc.BAD v8/src/d8.cc
+--- v8/src/d8.cc.BAD	2009-09-16 12:14:52.000000000 -0400
++++ v8/src/d8.cc	2009-09-16 12:17:42.000000000 -0400
+@@ -159,7 +159,8 @@ Handle<Value> Shell::Write(const Argumen
+       printf(" ");
+     }
+     v8::String::Utf8Value str(args[i]);
+-    fwrite(*str, sizeof(**str), str.length(), stdout);
++    int n = fwrite(*str, sizeof(**str), str.length(), stdout);
++    if (n != 1) printf("fwrite to stdout failed!\n");
+   }
+   return Undefined();
+ }
