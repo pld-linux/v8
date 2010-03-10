@@ -1,19 +1,16 @@
-# TODO
-# - cxx is not passed to build
-# - cleaner way for cxxflags
 
 # For the 1.2 branch, we use 0s here
 # For 1.3+, we use the three digit versions
 %define		somajor 2
 %define		sominor 0
-%define		sobuild 0
+%define		sobuild 6
 %define		sover %{somajor}.%{sominor}.%{sobuild}
 
-%define		snap	20091118svn3334
+%define		snap	20100309svn4070
 %define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
-Version:	2.0.0
+Version:	2.0.6
 Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
@@ -21,9 +18,12 @@ URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	%{name}-%{snap}.tar.bz2
-# Source0-md5:	014dd59b50b7859f3845b535ebd06ad2
-Patch0:		%{name}-d8-fwrite-return.patch
+# Source0-md5:	f329539eacdd444b2517ff66561ab0fe
+#Patch0:		%{name}-d8-fwrite-return.patch
 Patch1:		%{name}-2.0.0-d8-allocation.patch
+Patch2:		%{name}-cstdio.patch
+Patch3:		%{name}-strndup.patch
+BuildRequires:	gcc >= 4.0
 BuildRequires:	libstdc++-devel
 BuildRequires:	readline-devel
 BuildRequires:	scons
@@ -59,8 +59,10 @@ Development headers and libraries for v8.
 
 %prep
 %setup -q -n %{name}
-%patch0 -p1
+#%patch0 -p1
 %patch1 -p1
+%patch2 -p1
+%patch3 -p1
 %{__sed} -i -e "s,'-O3','%{rpmcxxflags}'.split(' ')," SConstruct
 
 # create simple makefile
@@ -74,6 +76,18 @@ EOF
 
 %build
 # build library
+
+CFLAGS="%{rpmcflags}"
+CXXFLAGS="%{rpmcxxflags}"
+LDFLAGS="%{rpmcflags}"
+%if "%{pld_release}" == "ac"
+CC=%{__cc}4
+CXX=%{__cxx}4
+%else
+CC=%{__cc}
+CXX=%{__cxx}
+%endif
+export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %scons \
 	library=shared \
 	snapshots=on \
