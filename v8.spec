@@ -2,15 +2,15 @@
 # For the 1.2 branch, we use 0s here
 # For 1.3+, we use the three digit versions
 %define		somajor 2
-%define		sominor 0
-%define		sobuild 6
+%define		sominor 1
+%define		sobuild 2
 %define		sover %{somajor}.%{sominor}.%{sobuild}
 
 %define		snap	20100309svn4070
 %define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
-Version:	2.0.6
+Version:	2.1.2.6
 Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
