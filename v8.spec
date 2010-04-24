@@ -2,15 +2,15 @@
 # For the 1.2 branch, we use 0s here
 # For 1.3+, we use the three digit versions
 %define		somajor 2
-%define		sominor 1
-%define		sobuild 5
+%define		sominor 2
+%define		sobuild 0
 %define		sover %{somajor}.%{sominor}.%{sobuild}
 
-%define		snap	20100328svn4300
+%define		snap	20100423svn4485
 %define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
-Version:	2.1.5
+Version:	2.2.4.2
 Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
@@ -18,7 +18,7 @@ URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	%{name}-%{snap}.tar.bz2
-# Source0-md5:	d44afd26f1eca36b2dcdb5c722c51728
+# Source0-md5:	2134de2bcba8ffe8a5381f0fc3c0a50e
 #Patch0:		%{name}-d8-fwrite-return.patch
 Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
