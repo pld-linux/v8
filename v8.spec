@@ -1,16 +1,16 @@
 
 # For the 1.2 branch, we use 0s here
 # For 1.3+, we use the three digit versions
-%define		somajor 2
-%define		sominor 3
-%define		sobuild 3
+%define		somajor 3
+%define		sominor 1
+%define		sobuild 5
 %define		sover %{somajor}.%{sominor}.%{sobuild}
 
-%define		snap	20100727svn5139
+%define		snap	20110218svn6858
 %define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
-Version:	2.3.3.1
+Version:	3.1.5.0
 Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
@@ -18,7 +18,7 @@ URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	%{name}-%{snap}.tar.bz2
-# Source0-md5:	d7ee80a7945c11aa9bcb3e523c081f26
+# Source0-md5:	8ebfa445587a4a649c704d8a20d14ab4
 #Patch0:		%{name}-d8-fwrite-return.patch
 Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
@@ -67,7 +67,7 @@ Development headers and libraries for v8.
 
 # create simple makefile
 cat <<'EOF'> Makefile
-V8_OBJS = obj/release/d8-debug.os obj/release/d8-posix.os obj/release/d8-readline.os obj/release/d8.os obj/release/d8-js.os
+V8_OBJS = obj/release/d8-debug.os obj/release/d8-posix.os obj/release/d8-readline.os obj/release/d8.os obj/release/d8-js.os obj/release/extensions/externalize-string-extension.os obj/release/extensions/gc-extension.os 
 V8_LIBS = -lpthread -lreadline -lpthread -L. -lv8
 
 v8:
@@ -103,13 +103,13 @@ export CFLAGS LDFLAGS CXXFLAGS CC CXX
 rm libv8.so
 # Now, lets make it right.
 %ifarch arm
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/arm/*.os -lpthread
+%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/arm/*.os obj/release/extensions/*.os -lpthread
 %endif
 %ifarch %{ix86}
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/ia32/*.os -lpthread
+%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/ia32/*.os obj/release/extensions/*.os -lpthread
 %endif
 %ifarch %{x8664}
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/x64/*.os -lpthread
+%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/x64/*.os obj/release/extensions/*.os -lpthread
 %endif
 
 # We need to do this so d8 binary can link against it.
