@@ -1,21 +1,15 @@
-%define		somajor 3
-%define		sominor 1
-%define		sobuild 5
-%define		sover	%{somajor}.%{sominor}.%{sobuild}
-
-%define		snap	20110218svn6858
-%define		rel		1
+%define		sover	%(v=%{version}; echo ${v%.*})
 Summary:	JavaScript Engine
 Name:		v8
-Version:	%{somajor}.%{sominor}.%{sobuild}.0
-Release:	0.%{snap}.%{rel}
-License:	BSD
+Version:	3.1.6.1
+Release:	1
+License:	New BSD License
 Group:		Libraries
 URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/trunk/ v8
-Source0:	%{name}-%{snap}.tar.bz2
-# Source0-md5:	8ebfa445587a4a649c704d8a20d14ab4
+Source0:	http://distfiles.gentoo.org/distfiles/%{name}-%{version}.tar.gz
+# Source0-md5:	56c1dd943a981895302308d70204046c
 Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
 Patch3:		%{name}-strndup.patch
@@ -53,7 +47,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 Development headers and libraries for v8.
 
 %prep
-%setup -q -n %{name}
+%setup -q
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -75,11 +69,11 @@ CFLAGS="%{rpmcflags}"
 CXXFLAGS="%{rpmcxxflags}"
 LDFLAGS="%{rpmcflags}"
 %if "%{pld_release}" == "ac"
-CC=%{__cc}4
-CXX=%{__cxx}4
+CC="%{__cc}4"
+CXX="%{__cxx}4"
 %else
-CC=%{__cc}
-CXX=%{__cxx}
+CC="%{__cc}"
+CXX="%{__cxx}"
 %endif
 export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %scons \
