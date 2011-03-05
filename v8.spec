@@ -1,16 +1,13 @@
-
-# For the 1.2 branch, we use 0s here
-# For 1.3+, we use the three digit versions
 %define		somajor 3
 %define		sominor 1
 %define		sobuild 5
-%define		sover %{somajor}.%{sominor}.%{sobuild}
+%define		sover	%{somajor}.%{sominor}.%{sobuild}
 
 %define		snap	20110218svn6858
 %define		rel		1
 Summary:	JavaScript Engine
 Name:		v8
-Version:	3.1.5.0
+Version:	%{somajor}.%{sominor}.%{sobuild}.0
 Release:	0.%{snap}.%{rel}
 License:	BSD
 Group:		Libraries
@@ -19,12 +16,10 @@ URL:		http://code.google.com/p/v8
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	%{name}-%{snap}.tar.bz2
 # Source0-md5:	8ebfa445587a4a649c704d8a20d14ab4
-#Patch0:		%{name}-d8-fwrite-return.patch
 Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
 Patch3:		%{name}-strndup.patch
-BuildRequires:	gcc >= 4.0
-BuildRequires:	libstdc++-devel
+BuildRequires:	libstdc++-devel >= 5:4.0
 BuildRequires:	readline-devel
 BuildRequires:	scons
 ExclusiveArch:	%{ix86} %{x8664} arm
@@ -59,7 +54,6 @@ Development headers and libraries for v8.
 
 %prep
 %setup -q -n %{name}
-#%patch0 -p1
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
@@ -67,7 +61,7 @@ Development headers and libraries for v8.
 
 # create simple makefile
 cat <<'EOF'> Makefile
-V8_OBJS = obj/release/d8-debug.os obj/release/d8-posix.os obj/release/d8-readline.os obj/release/d8.os obj/release/d8-js.os obj/release/extensions/externalize-string-extension.os obj/release/extensions/gc-extension.os 
+V8_OBJS = obj/release/d8-debug.os obj/release/d8-posix.os obj/release/d8-readline.os obj/release/d8.os obj/release/d8-js.os obj/release/extensions/externalize-string-extension.os obj/release/extensions/gc-extension.os
 V8_LIBS = -lpthread -lreadline -lpthread -L. -lv8
 
 v8:
@@ -157,6 +151,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/v8
 
 %files libs
+%defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libv8.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libv8.so.0
 
