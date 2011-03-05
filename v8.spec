@@ -1,8 +1,9 @@
 %define		sover	%(v=%{version}; echo ${v%.*})
+%define		somajor	%(v=%{version}; echo ${v%%%%.*})
 Summary:	JavaScript Engine
 Name:		v8
 Version:	3.1.6.1
-Release:	1
+Release:	2
 License:	New BSD License
 Group:		Libraries
 URL:		http://code.google.com/p/v8
@@ -131,7 +132,7 @@ install -p libv8.so.*.*.* $RPM_BUILD_ROOT%{_libdir}
 
 lib=$(basename $RPM_BUILD_ROOT%{_libdir}/libv8.so.*.*.*)
 ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so
-ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.0
+ln -s $lib $RPM_BUILD_ROOT%{_libdir}/libv8.so.%{somajor}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -147,7 +148,7 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libv8.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libv8.so.0
+%attr(755,root,root) %ghost %{_libdir}/libv8.so.3
 
 %files devel
 %defattr(644,root,root,755)
