@@ -2,15 +2,15 @@
 %define		somajor	%(v=%{version}; echo ${v%%%%.*})
 Summary:	JavaScript Engine
 Name:		v8
-Version:	3.1.6.1
-Release:	2
+Version:	3.2.0.1
+Release:	1
 License:	New BSD License
 Group:		Libraries
 URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/trunk/ v8
 Source0:	http://distfiles.gentoo.org/distfiles/%{name}-%{version}.tar.gz
-# Source0-md5:	56c1dd943a981895302308d70204046c
+# Source0-md5:	c8c6ae903e4ff6e70730f09b6c3a0fee
 Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
 Patch3:		%{name}-strndup.patch
