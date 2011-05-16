@@ -1,20 +1,45 @@
-diff -ur v8-3.2.10.6-o/SConstruct v8-3.2.10.6/SConstruct
---- v8-3.2.10.6-o/SConstruct	2011-05-14 00:38:09.000000000 -0600
-+++ v8-3.2.10.6/SConstruct	2011-05-14 00:38:49.000000000 -0600
-@@ -1325,15 +1325,12 @@
+Only in v8-3.3.6.1: Makefile
+diff -ur v8-3.3.6.1-o//SConstruct v8-3.3.6.1/SConstruct
+--- v8-3.3.6.1-o//SConstruct	2011-05-04 06:43:48.000000000 -0600
++++ v8-3.3.6.1/SConstruct	2011-05-16 01:13:53.000000000 -0600
+@@ -1308,17 +1308,17 @@
+   suffix = SUFFIXES[target_id]
    library_name = 'v8' + suffix
    preparser_library_name = 'v8preparser' + suffix
-   version = GetVersion()
+-  version = GetVersion()
 -  if context.options['soname'] == 'on':
 -    # When building shared object with SONAME version the library name.
 -    library_name += '-' + version
++  version = GetVersion().split('.')[0]
  
    # Generate library SONAME if required by the build.
    if context.options['soname'] == 'on':
      soname = GetSpecificSONAME()
      if soname == '':
 -      soname = 'lib' + library_name + '.so'
+-    env['SONAME'] = soname
 +      soname = 'lib' + library_name + '.so.' + version
-     env['SONAME'] = soname
++      prepsoname = 'lib' + preparser_library_name + '.so.' + version
++  else:
++    soname = None
++    prepsoname = None
  
    # Build the object files by invoking SCons recursively.
+   (object_files, shell_files, mksnapshot, preparser_files) = env.SConscript(
+@@ -1343,11 +1343,13 @@
+     # PDB files when compiling using MSVC so we specify it manually.
+     # This should not affect any other platforms.
+     pdb_name = library_name + '.dll.pdb'
+-    library = env.SharedLibrary(library_name, object_files, PDB=pdb_name)
++    library = env.SharedLibrary(library_name, object_files, PDB=pdb_name, SONAME=soname)
+     preparser_pdb_name = preparser_library_name + '.dll.pdb';
+     preparser_library = env.SharedLibrary(preparser_library_name,
+                                           preparser_files,
+-                                          PDB=preparser_pdb_name)
++                                          PDB=preparser_pdb_name,
++                                          SONAME=prepsoname)
++
+   context.library_targets.append(library)
+   context.library_targets.append(preparser_library)
+ 
+Only in v8-3.3.6.1: SConstruct~
