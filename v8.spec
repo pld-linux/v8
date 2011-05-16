@@ -1,19 +1,25 @@
+#
+# TODO: fix readline
+#
+
 %define		sover	%(v=%{version}; echo ${v%.*})
 %define		somajor	%(v=%{version}; echo ${v%%%%.*})
 Summary:	JavaScript Engine
 Name:		v8
-Version:	3.2.0.1
+Version:	3.3.6.1
 Release:	1
 License:	New BSD License
 Group:		Libraries
 URL:		http://code.google.com/p/v8
 # No tarballs, pulled from svn
-# svn export http://v8.googlecode.com/svn/trunk/ v8
+# svn export http://v8.googlecode.com/svn/tags/%{version} v8-%{version}
 Source0:	http://distfiles.gentoo.org/distfiles/%{name}-%{version}.tar.gz
-# Source0-md5:	c8c6ae903e4ff6e70730f09b6c3a0fee
-Patch1:		%{name}-2.0.0-d8-allocation.patch
+# Source0-md5:	b8504e98681669c95738724717c4e93f
+#Patch1:		%{name}-2.0.0-d8-allocation.patch
 Patch2:		%{name}-cstdio.patch
 Patch3:		%{name}-strndup.patch
+Patch4:		%{name}-soname.patch
+Patch5:		%{name}-dynlink.patch
 BuildRequires:	libstdc++-devel >= 5:4.0
 BuildRequires:	readline-devel
 BuildRequires:	scons
@@ -49,19 +55,11 @@ Development headers and libraries for v8.
 
 %prep
 %setup -q
-%patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
+%patch5 -p1
 %{__sed} -i -e "s,'-O3','%{rpmcxxflags}'.split(' ')," SConstruct
-
-# create simple makefile
-cat <<'EOF'> Makefile
-V8_OBJS = obj/release/d8-debug.os obj/release/d8-posix.os obj/release/d8-readline.os obj/release/d8.os obj/release/d8-js.os obj/release/extensions/externalize-string-extension.os obj/release/extensions/gc-extension.os
-V8_LIBS = -lpthread -lreadline -lpthread -L. -lv8
-
-v8:
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -o $@ $(V8_OBJS) $(V8_LIBS)
-EOF
 
 %build
 # build library
@@ -80,7 +78,7 @@ export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %scons \
 	library=shared \
 	snapshots=on \
-	soname=off \
+	soname=on \
 	console=readline \
 	visibility=default \
 %ifarch x86_64
@@ -88,18 +86,7 @@ export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %endif
 	env=CCFLAGS:"-fPIC"
 
-# the soname=on creates soname as libv8-1.3.11.1.so, that's wrong
-rm libv8.so
-# Now, lets make it right.
-%ifarch arm
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/arm/*.os obj/release/extensions/*.os -lpthread
-%endif
-%ifarch %{ix86}
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/ia32/*.os obj/release/extensions/*.os -lpthread
-%endif
-%ifarch %{x8664}
-%{__cxx} %{rpmcflags} %{rpmldflags} -fPIC -o libv8.so.%{sover} -shared -Wl,-soname,libv8.so.%{somajor} obj/release/*.os obj/release/x64/*.os obj/release/extensions/*.os -lpthread
-%endif
+mv libv8.so libv8.so.%{sover}
 
 # We need to do this so d8 binary can link against it.
 ln -sf libv8.so.%{sover} libv8.so
@@ -108,25 +95,17 @@ ln -sf libv8.so.%{sover} libv8.so
 %scons d8 \
 	library=shared \
 	snapshots=on \
-	console=readline \
+	console=dumb \
 	visibility=default \
 	%ifarch x86_64
 	arch=x64 \
 	%endif
 	env=CCFLAGS:"-fPIC"
 
-# Sigh. scons links all statically, relink
-mv d8 d8.static
-
-%{__make} v8 \
-	CXX="%{__cxx}" \
-	CXXFLAGS="%{rpmcxxflags}" \
-	LDFLAGS="%{rpmldflags}"
-
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_includedir},%{_libdir}}
-install -p v8 $RPM_BUILD_ROOT%{_bindir}
+install -p d8 $RPM_BUILD_ROOT%{_bindir}/v8
 cp -a include/*.h $RPM_BUILD_ROOT%{_includedir}
 install -p libv8.so.*.*.* $RPM_BUILD_ROOT%{_libdir}
 
