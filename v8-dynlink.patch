@@ -1,0 +1,13 @@
+Only in v8-3.3.6.1: Makefile
+diff -ur v8-3.3.6.1-o//SConstruct v8-3.3.6.1/SConstruct
+--- v8-3.3.6.1-o//SConstruct	2011-05-16 01:31:49.000000000 -0600
++++ v8-3.3.6.1/SConstruct	2011-05-16 01:32:25.000000000 -0600
+@@ -1356,7 +1356,7 @@
+   d8_env = Environment(tools=tools)
+   d8_env.Replace(**context.flags['d8'])
+   context.ApplyEnvOverrides(d8_env)
+-  shell = d8_env.Program('d8' + suffix, object_files + shell_files)
++  shell = d8_env.Program('d8' + suffix, shell_files, LIBS='v8', LIBPATH='.')
+   context.d8_targets.append(shell)
+ 
+   for sample in context.samples:
