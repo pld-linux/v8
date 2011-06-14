@@ -10,3 +10,16 @@ diff -ur v8-/src/allocation.h v8/src/allocation.h
  
  
  // Allocation policy for allocating in the C free store using malloc
+--- v8-3.4.3/src/allocation.cc.orig	2011-06-14 16:53:10.000000000 +0200
++++ v8-3.4.3/src/allocation.cc	2011-06-14 19:36:16.581069856 +0200
+@@ -90,8 +90,8 @@
+ }
+ 
+ 
+-char* StrNDup(const char* str, int n) {
+-  int length = StrLength(str);
++char* StrNDup(const char* str, size_t n) {
++  size_t length = StrLength(str);
+   if (n < length) length = n;
+   char* result = NewArray<char>(length + 1);
+   memcpy(result, str, length);
