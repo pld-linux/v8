@@ -7,7 +7,7 @@ License:	BSD
 Group:		Applications
 # No tarballs, pulled from svn
 # svn export http://v8.googlecode.com/svn/tags/%{version} v8-%{version}
-Source0:	http://distfiles.gentoo.org/distfiles/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 # Source0-md5:	5b0f6342961d2b0e74c362c6d119077a
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
