@@ -1,5 +1,5 @@
---- v8-3.6.6.7/SConstruct~	2011-11-14 08:17:42.000000000 +0200
-+++ v8-3.6.6.7/SConstruct	2011-11-14 08:19:38.420636802 +0200
+--- v8-3.6.6.7/SConstruct	2011-11-14 08:19:38.420636802 +0200
++++ v8-3.6.6.7/SConstruct	2011-11-14 13:20:28.692835719 +0200
 @@ -1308,17 +1308,17 @@
    suffix = SUFFIXES[target_id]
    library_name = 'v8' + suffix
@@ -24,12 +24,15 @@
  
    # Build the object files by invoking SCons recursively.
    (object_files, shell_files, mksnapshot, preparser_files) = env.SConscript(
-@@ -1433,7 +1433,7 @@
-     # PDB files when compiling using MSVC so we specify it manually.
+@@ -1434,9 +1434,9 @@
      # This should not affect any other platforms.
+     pdb_name = library_name + '.dll.pdb'
      pdb_name = library_name + '.dll.pdb'
 -    library = env.SharedLibrary(library_name, object_files, PDB=pdb_name)
 +    library = env.SharedLibrary(library_name, object_files, PDB=pdb_name, SONAME=soname)
      preparser_pdb_name = preparser_library_name + '.dll.pdb';
-     preparser_soname = 'lib' + preparser_library_name + '.so';
+-    preparser_soname = 'lib' + preparser_library_name + '.so';
++    preparser_soname = 'lib' + preparser_library_name + '.so.' + version;
      preparser_library = env.SharedLibrary(preparser_library_name,
+                                           preparser_files,
+                                           PDB=preparser_pdb_name,

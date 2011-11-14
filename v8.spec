@@ -1,8 +1,11 @@
+# TODO
+# - we might need bigger soname than just major version, as 3.4 ande 3.6 are
+#   rather different and chrome fails to build
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.6.6.7
-Release:	2
+Release:	3
 License:	BSD
 Group:		Applications
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
@@ -110,12 +113,12 @@ export CFLAGS LDFLAGS CXXFLAGS CC CXX
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_includedir},%{_libdir}}
 
-for lib in libv8 libv8preparser ; do
+for lib in libv8 libv8preparser; do
 	install -p ${lib}.so $RPM_BUILD_ROOT%{_libdir}/${lib}.so.%{version}
 	ln -sf ${lib}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/${lib}.so.%{somajor}
 	ln -sf ${lib}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/${lib}.so
 done
-cp -a include/*.h $RPM_BUILD_ROOT%{_includedir}
+cp -p include/*.h $RPM_BUILD_ROOT%{_includedir}
 
 install -p d8 $RPM_BUILD_ROOT%{_bindir}/v8
 
