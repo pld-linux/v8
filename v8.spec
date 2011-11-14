@@ -2,7 +2,7 @@ Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.6.6.7
-Release:	1
+Release:	2
 License:	BSD
 Group:		Applications
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
@@ -17,6 +17,7 @@ BuildRequires:	python >= 1:2.4
 BuildRequires:	readline-devel
 BuildRequires:	scons >= 1.0.0
 BuildRequires:	sed >= 4.0
+Requires:	%{name}-libs = %{version}-%{release}
 ExclusiveArch:	%{ix86} %{x8664} arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
