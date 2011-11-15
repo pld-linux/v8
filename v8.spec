@@ -1,11 +1,12 @@
 # TODO
 # - we might need bigger soname than just major version, as 3.4 ande 3.6 are
 #   rather different and chrome fails to build
+# - readline not working in d8 (at least arrows)
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.6.6.7
-Release:	3
+Release:	4
 License:	BSD
 Group:		Applications
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
@@ -120,7 +121,7 @@ for lib in libv8 libv8preparser; do
 done
 cp -p include/*.h $RPM_BUILD_ROOT%{_includedir}
 
-install -p d8 $RPM_BUILD_ROOT%{_bindir}/v8
+install -p d8 $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -131,7 +132,7 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(644,root,root,755)
 %doc AUTHORS ChangeLog LICENSE LICENSE.strongtalk LICENSE.valgrind
-%attr(755,root,root) %{_bindir}/v8
+%attr(755,root,root) %{_bindir}/d8
 
 %files libs
 %defattr(644,root,root,755)
