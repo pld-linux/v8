@@ -1,12 +1,10 @@
 # TODO
-# - we might need bigger soname than just major version, as 3.4 ande 3.6 are
-#   rather different and chrome fails to build
 # - readline not working in d8 (at least arrows)
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.6.6.7
-Release:	4
+Release:	5
 License:	BSD
 Group:		Applications
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
@@ -25,7 +23,7 @@ Requires:	%{name}-libs = %{version}-%{release}
 ExclusiveArch:	%{ix86} %{x8664} arm
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		somajor	%(v=%{version}; echo ${v%%%%.*})
+%define		sover	%(echo %{version} | cut -d. -f1-2)
 
 %description
 V8 is Google's open source JavaScript engine. V8 is written in C++ and
@@ -115,9 +113,9 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_includedir},%{_libdir}}
 
 for lib in libv8 libv8preparser; do
-	install -p ${lib}.so $RPM_BUILD_ROOT%{_libdir}/${lib}.so.%{version}
-	ln -sf ${lib}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/${lib}.so.%{somajor}
-	ln -sf ${lib}.so.%{version} $RPM_BUILD_ROOT%{_libdir}/${lib}.so
+	install -p $lib.so $RPM_BUILD_ROOT%{_libdir}/$lib.so.%{version}
+	ln -sf $lib.so.%{version} $RPM_BUILD_ROOT%{_libdir}/$lib.so.%{sover}
+	ln -sf $lib.so.%{version} $RPM_BUILD_ROOT%{_libdir}/$lib.so
 done
 cp -p include/*.h $RPM_BUILD_ROOT%{_includedir}
 
@@ -137,9 +135,9 @@ rm -rf $RPM_BUILD_ROOT
 %files libs
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libv8.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libv8.so.3
+%attr(755,root,root) %ghost %{_libdir}/libv8.so.%{sover}
 %attr(755,root,root) %{_libdir}/libv8preparser.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libv8preparser.so.3
+%attr(755,root,root) %ghost %{_libdir}/libv8preparser.so.%{sover}
 
 %files devel
 %defattr(644,root,root,755)

@@ -8,7 +8,7 @@
 -  if context.options['soname'] == 'on':
 -    # When building shared object with SONAME version the library name.
 -    library_name += '-' + version
-+  version = GetVersion().split('.')[0]
++  version = '.'.join(GetVersion().split('.')[:2])
  
    # Generate library SONAME if required by the build.
    if context.options['soname'] == 'on':
