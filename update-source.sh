@@ -22,9 +22,15 @@ if [ "$1" ]; then
 fi
 
 if [ -z "$version" ]; then
-	echo "Looking for latest version..."
-	version=$(svn ls $baseurl/tags/ | sort -V | tail -n1)
+	basever=$(awk '/^Version:/{split($2, v, "."); printf("%d[.]%d[.]%d\n", v[1], v[2], v[3])}' $specfile)
+	echo "Looking for latest version for $basever..."
+	version=$(svn ls $baseurl/tags/ | grep "^$basever\." | sort -V | tail -n1)
 	version=${version%/}
+fi
+
+if [ -z "$version" ]; then
+	echo >&2 "Failed to lookup version"
+	exit 1
 fi
 
 if [ "$version" = "trunk" ]; then
