@@ -3,13 +3,13 @@
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.6.6.24
+Version:	3.6.6.25
 Release:	1
 License:	BSD
 Group:		Applications
 #Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	f802b986976f281e0679efbdd55d8611
+# Source0-md5:	b3684ec6fc50fecb450bf8e9aa59a007
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch2:		%{name}-soname.patch
