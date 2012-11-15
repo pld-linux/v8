@@ -81,7 +81,7 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
-%{__sed} -i -e "s,'-O3','%{rpmcxxflags}'.split(' ')," SConstruct
+%{__sed} -i -e "s/'-O3'/'%{rpmcxxflags}'.split(' ')/" SConstruct
 # some "unused-but-set" warnings
 %{__sed} -i -e "s/'-Werror',//" SConstruct
 
