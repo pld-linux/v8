@@ -4,22 +4,20 @@
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.11.10.25
+Version:	3.15.11.10
 Release:	1
 License:	BSD
 Group:		Applications
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
-# Source0-md5:	ed471d5c406a2f851afa448e25934c26
+# Source0-md5:	89abc099b4433159fc930ed9c5a84e0c
 #Source0:	%{name}-%{version}.tar.bz2
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
-Patch2:		%{name}-soname.patch
 Patch3:		%{name}-dynlink.patch
 URL:		http://code.google.com/p/v8/
 BuildRequires:	libstdc++-devel >= 5:4.0
 BuildRequires:	python >= 1:2.4
 BuildRequires:	readline-devel
-BuildRequires:	scons >= 1.0.0
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
 ExclusiveArch:	%{ix86} %{x8664} arm
@@ -80,11 +78,7 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%patch2 -p1
 %patch3 -p1
-%{__sed} -i -e "s!'-O3'!'%{rpmcxxflags}'.split(' ')!" SConstruct
-# some "unused-but-set" warnings
-%{__sed} -i -e "s/'-Werror',//" SConstruct
 
 %build
 # build library
@@ -99,29 +93,21 @@ CC="%{__cc}"
 CXX="%{__cxx}"
 %endif
 export CFLAGS LDFLAGS CXXFLAGS CC CXX
-%scons library d8 \
-	library=shared \
-	snapshots=on \
-	soname=on \
-	console=readline \
-	visibility=default \
-%ifarch %{x8664}
-	arch=x64 \
-%endif
-	env=CCFLAGS:"-fPIC"
+%{__make} native \
+    library=shared \
+    soname_version=%{sover} \
+	console=readline
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_bindir},%{_includedir},%{_libdir}}
 
-for lib in libv8 libv8preparser; do
-	install -p $lib.so $RPM_BUILD_ROOT%{_libdir}/$lib.so.%{version}
-	ln -sf $lib.so.%{version} $RPM_BUILD_ROOT%{_libdir}/$lib.so.%{sover}
-	ln -sf $lib.so.%{version} $RPM_BUILD_ROOT%{_libdir}/$lib.so
-done
+install -p out/native/lib.target/libv8.so.%{sover} $RPM_BUILD_ROOT%{_libdir}/libv8.so.%{version}
+ln -sf libv8.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libv8.so.%{sover}
+ln -sf libv8.so.%{version} $RPM_BUILD_ROOT%{_libdir}/libv8.so
 cp -p include/*.h $RPM_BUILD_ROOT%{_includedir}
 
-install -p d8 $RPM_BUILD_ROOT%{_bindir}
+install -p out/native/d8 $RPM_BUILD_ROOT%{_bindir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -138,11 +124,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libv8.so.*.*.*
 %attr(755,root,root) %ghost %{_libdir}/libv8.so.%{sover}
-%attr(755,root,root) %{_libdir}/libv8preparser.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libv8preparser.so.%{sover}
 
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/libv8.so
-%attr(755,root,root) %{_libdir}/libv8preparser.so
 %{_includedir}/v8*.h
