@@ -1,16 +1,15 @@
-# $Revision: 1.35 $, $Date: 2012/04/14 17:55:16 $
 # TODO
 # - readline not working in d8 (at least arrows)
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.15.11.10
+Version:	3.15.11.17
 Release:	1
 License:	BSD
 Group:		Applications
+# Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
-# Source0-md5:	89abc099b4433159fc930ed9c5a84e0c
-#Source0:	%{name}-%{version}.tar.bz2
+# Source0-md5:	0930164aa73e5ce94565ae1b85fac19b
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
@@ -20,7 +19,7 @@ BuildRequires:	python >= 1:2.4
 BuildRequires:	readline-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
-ExclusiveArch:	%{ix86} %{x8664} arm
+ExclusiveArch:	%{ix86} %{x8664} arm mips
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		sover	%(echo %{version} | cut -d. -f1-2)
@@ -94,8 +93,8 @@ CXX="%{__cxx}"
 %endif
 export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %{__make} native \
-    library=shared \
-    soname_version=%{sover} \
+	library=shared \
+	soname_version=%{sover} \
 	console=readline
 
 %install
