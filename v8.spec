@@ -15,7 +15,7 @@ Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
 URL:		http://code.google.com/p/v8/
 BuildRequires:	libstdc++-devel >= 5:4.0
-BuildRequires:	python >= 1:2.4
+BuildRequires:	python >= 1:2.5
 BuildRequires:	readline-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
@@ -84,13 +84,8 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 CFLAGS="%{rpmcflags}"
 CXXFLAGS="%{rpmcxxflags}"
 LDFLAGS="%{rpmldflags}"
-%if "%{pld_release}" == "ac"
-CC="%{__cc}4"
-CXX="%{__cxx}4"
-%else
 CC="%{__cc}"
 CXX="%{__cxx}"
-%endif
 export CFLAGS LDFLAGS CXXFLAGS CC CXX
 %{__make} native \
 	library=shared \
