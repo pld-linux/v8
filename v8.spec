@@ -1,12 +1,16 @@
 # TODO
 # - readline not working in d8 (at least arrows)
+#
+# Conditional build:
+%bcond_without	verbose			# verbose build (V=1)
+
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.15.11.17
 Release:	1
 License:	BSD
-Group:		Applications
+Group:		Development/Languages
 # Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
 Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
 # Source0-md5:	0930164aa73e5ce94565ae1b85fac19b
@@ -80,17 +84,17 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %patch3 -p1
 
 %build
-# build library
-CFLAGS="%{rpmcflags}"
-CXXFLAGS="%{rpmcxxflags}"
-LDFLAGS="%{rpmldflags}"
-CC="%{__cc}"
-CXX="%{__cxx}"
-export CFLAGS LDFLAGS CXXFLAGS CC CXX
-%{__make} native \
-	library=shared \
+%{__make} -r native \
+	component=shared_library \
 	soname_version=%{sover} \
-	console=readline
+	console=readline \
+	CC="%{__cc}" \
+	CXX="%{__cxx}" \
+	LINK="flock %{__cxx} -fuse-ld=gold" \
+	CFLAGS="%{rpmcflags}" \
+	CXXFLAGS="%{rpmcxxflags}" \
+	LDFLAGS="%{rpmldflags}" \
+	%{?with_verbose:V=1}
 
 %install
 rm -rf $RPM_BUILD_ROOT
