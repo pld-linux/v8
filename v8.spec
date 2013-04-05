@@ -90,7 +90,7 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 	console=readline \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
-	LINK="flock %{__cxx} -fuse-ld=gold" \
+	LINK="%{__cxx} -fuse-ld=gold" \
 	CFLAGS="%{rpmcflags}" \
 	CXXFLAGS="%{rpmcxxflags}" \
 	LDFLAGS="%{rpmldflags}" \
