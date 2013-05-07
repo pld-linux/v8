@@ -1,3 +1,5 @@
+# NOTES
+# - see this page for deciding switching branch: http://upstream-tracker.org/versions/v8.html
 # TODO
 # - readline not working in d8 (at least arrows)
 #
