@@ -21,6 +21,7 @@ Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
 URL:		http://code.google.com/p/v8/
+BuildRequires:	gyp
 BuildRequires:	libstdc++-devel >= 5:4.0
 BuildRequires:	python >= 1:2.5
 BuildRequires:	readline-devel
