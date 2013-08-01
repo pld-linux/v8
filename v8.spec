@@ -9,13 +9,14 @@
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.15.11.17
+Version:	3.15.11.18
 Release:	1
 License:	BSD
 Group:		Development/Languages
 # Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
-Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
-# Source0-md5:	0930164aa73e5ce94565ae1b85fac19b
+#Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{version}.tar.bz2
+# Source0-md5:	a08c74de1f8d71d309077cb7a640583f
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
@@ -85,6 +86,8 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %patch1 -p1
 %patch3 -p1
 
+install -d build/gyp
+ln -s %{_bindir}/gyp build/gyp/gyp
 
 %build
 # -Wno-unused-local-typedefs is gcc 4.8 workaround: http://code.google.com/p/v8/issues/detail?id=2149
