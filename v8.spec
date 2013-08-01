@@ -85,7 +85,9 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %patch1 -p1
 %patch3 -p1
 
+
 %build
+# -Wno-unused-local-typedefs is gcc 4.8 workaround: http://code.google.com/p/v8/issues/detail?id=2149
 %{__make} -r native \
 	component=shared_library \
 	soname_version=%{sover} \
@@ -94,7 +96,7 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 	CXX="%{__cxx}" \
 	LINK="%{__cxx} -fuse-ld=gold" \
 	CFLAGS="%{rpmcflags}" \
-	CXXFLAGS="%{rpmcxxflags}" \
+	CXXFLAGS="%{rpmcxxflags} -Wno-unused-local-typedefs" \
 	LDFLAGS="%{rpmldflags}" \
 	%{?with_verbose:V=1}
 
