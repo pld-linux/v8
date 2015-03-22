@@ -9,17 +9,14 @@
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.15.11.18
-Release:	1
+Version:	3.28.71.9
+Release:	0.1
 License:	BSD
 Group:		Development/Languages
-# Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
-#Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	a08c74de1f8d71d309077cb7a640583f
-Patch0:		%{name}-cstdio.patch
+# Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.28
+Source0:	http://gsdview.appspot.com/chromium-browser-official/v8-%{version}-lite.tar.bz2
+# Source0-md5:	369ff2d7557b142bde54cbb738dcf91b
 Patch1:		%{name}-strndup.patch
-Patch3:		%{name}-dynlink.patch
 URL:		http://code.google.com/p/v8/
 BuildRequires:	gyp
 BuildRequires:	libstdc++-devel >= 5:4.0
@@ -27,7 +24,7 @@ BuildRequires:	python >= 1:2.5
 BuildRequires:	readline-devel
 BuildRequires:	sed >= 4.0
 Requires:	%{name}-libs = %{version}-%{release}
-ExclusiveArch:	%{ix86} %{x8664} arm mips
+ExclusiveArch:	%{ix86} %{x8664} arm mips x32
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		sover	%(echo %{version} | cut -d. -f1-2)
@@ -83,12 +80,10 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 
 %prep
 %setup -q
-%patch0 -p1
 %patch1 -p1
-%patch3 -p1
 
 install -d build/gyp
-ln -s %{_bindir}/gyp build/gyp/gyp
+ln -sf %{_bindir}/gyp build/gyp/gyp
 
 %build
 # -Wno-unused-local-typedefs is gcc 4.8 workaround: http://code.google.com/p/v8/issues/detail?id=2149
@@ -96,6 +91,7 @@ ln -s %{_bindir}/gyp build/gyp/gyp
 	component=shared_library \
 	soname_version=%{sover} \
 	console=readline \
+	i18nsupport=off \
 	CC="%{__cc}" \
 	CXX="%{__cxx}" \
 	LINK="%{__cxx} -fuse-ld=gold" \
