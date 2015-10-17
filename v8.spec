@@ -20,6 +20,7 @@ Source0:	%{name}-%{version}.tar.bz2
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
+Patch4:		abort-uncaught-exception.patch
 URL:		http://code.google.com/p/v8/
 BuildRequires:	gyp
 BuildRequires:	libstdc++-devel >= 5:4.0
@@ -86,6 +87,7 @@ Pliki nagłówkowe silnika JavaScriptu V8.
 %patch0 -p1
 %patch1 -p1
 %patch3 -p1
+%patch4 -p1
 
 install -d build/gyp
 ln -s %{_bindir}/gyp build/gyp/gyp
