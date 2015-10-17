@@ -9,14 +9,12 @@
 Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
-Version:	3.15.11.18
+Version:	3.14.5.10
 Release:	1
 License:	BSD
 Group:		Development/Languages
-# Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
-#Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
-Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	a08c74de1f8d71d309077cb7a640583f
+Source0:	http://pkgs.fedoraproject.org/repo/pkgs/v8/%{name}-%{version}.tar.bz2/d4e3a038ad387fd7b75d40a89e231ef7/%{name}-%{version}.tar.bz2
+# Source0-md5:	d4e3a038ad387fd7b75d40a89e231ef7
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
