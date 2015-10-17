@@ -59,6 +59,14 @@ index 96d564f..4b1aa67 100644
    i::Isolate* isolate = reinterpret_cast<i::Isolate*>(this);
 --- v8-3.15.11.18/src/isolate.cc	2013-05-07 21:00:06.000000000 +0300
 +++ v8-3.15.11.18/src/isolate.cc	2015-10-17 22:30:21.746915216 +0300
+@@ -1168,6 +1168,7 @@
+   return false;
+ }
+ 
++static int fatal_exception_depth = 0;
+ 
+ void Isolate::DoThrow(Object* exception, MessageLocation* location) {
+   ASSERT(!has_pending_exception());
 @@ -1250,6 +1250,28 @@
          thread_local_top()->pending_message_start_pos_ = location->start_pos();
          thread_local_top()->pending_message_end_pos_ = location->end_pos();
@@ -132,3 +140,14 @@ index 2769ca7..8719aa1 100644
    friend class ExecutionAccess;
    friend class HandleScopeImplementer;
    friend class IsolateInitializer;
+--- v8-3.15.11.18/src/flag-definitions.h	2013-05-07 21:00:06.000000000 +0300
++++ v8-3.14.5.10/src/flag-definitions.h	2013-05-23 13:49:13.000000000 +0300
+@@ -462,6 +449,8 @@
+            "Stack alingment in bytes in simulator (4 or 8, 8 is default)")
+ 
+ // isolate.cc
++DEFINE_bool(abort_on_uncaught_exception, false,
++            "abort program (dump core) when an uncaught exception is thrown")
+ DEFINE_bool(trace_exception, false,
+             "print stack trace when throwing exceptions")
+ DEFINE_bool(preallocate_message_memory, false,
