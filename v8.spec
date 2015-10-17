@@ -10,7 +10,7 @@ Summary:	JavaScript Engine by Google
 Summary(pl.UTF-8):	Silnik JavaScript firmy Google
 Name:		v8
 Version:	3.15.11.18
-Release:	1
+Release:	2
 License:	BSD
 Group:		Development/Languages
 # Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
