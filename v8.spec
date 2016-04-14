@@ -1,5 +1,3 @@
-# NOTES
-# - see this page for deciding switching branch: http://upstream-tracker.org/versions/v8.html
 # TODO
 # - readline not working in d8 (at least arrows)
 #
@@ -13,15 +11,15 @@ Version:	3.15.11.18
 Release:	2
 License:	BSD
 Group:		Development/Languages
-# Source0Download: http://gsdview.appspot.com/chromium-browser-official/?marker=v8-3.15.11.17.tar.bz2
-#Source0:	http://commondatastorage.googleapis.com/chromium-browser-official/%{name}-%{version}.tar.bz2
+#Source0Download: https://github.com/v8/v8/releases
+#Source0: https://github.com/v8/v8/archive/%{version}/%{name}-%{version}.tar.gz
 Source0:	%{name}-%{version}.tar.bz2
 # Source0-md5:	a08c74de1f8d71d309077cb7a640583f
 Patch0:		%{name}-cstdio.patch
 Patch1:		%{name}-strndup.patch
 Patch3:		%{name}-dynlink.patch
 Patch4:		abort-uncaught-exception.patch
-URL:		https://code.google.com/p/v8/
+URL:		https://github.com/v8/v8/wiki
 BuildRequires:	gyp
 BuildRequires:	libstdc++-devel >= 5:4.0
 BuildRequires:	python >= 1:2.5
